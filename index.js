@@ -32,18 +32,9 @@ const replaceTemplate = require("./moduals/replaceTemplate");
 ////////////////////////////////////////////
 //SERVER
 
-const tempOverview = fs.readFileSync(
-  `${__dirname}/templates/template-overview.html`,
-  "utf-8"
-);
-const tempCard = fs.readFileSync(
-  `${__dirname}/templates/template-card.html`,
-  "utf-8"
-);
-const tempProduct = fs.readFileSync(
-  `${__dirname}/templates/template-product.html`,
-  "utf-8"
-);
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, "utf-8");
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, "utf-8");
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, "utf-8");
 const dataJson = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(dataJson);
 
@@ -55,9 +46,7 @@ const server = http.createServer((req, res) => {
       "Content-type": "text/html",
     });
 
-    const cardHTML = dataObj
-      .map((el) => replaceTemplate(tempCard, el))
-      .join("");
+    const cardHTML = dataObj.map((el) => replaceTemplate(tempCard, el)).join("");
     const output = tempOverview.replace("{%PRODUCT_CARDS%}", cardHTML);
     res.end(output);
 
