@@ -1,6 +1,8 @@
 const fs = require("fs");
 const http = require("http");
+const url = require("url");
 const { json } = require("stream/consumers");
+
 ///////////////////////////////////////////////////
 //FILES
 //synchronous code or blocking code
@@ -62,8 +64,9 @@ function replaceTemplate(temp, product) {
 }
 
 const server = http.createServer((req, res) => {
+  const { query, pathname } = url.parse(req.url, true);
   //OVERVIEW PAGE
-  if (req.url === "/overview" || req.url === "/") {
+  if (pathname === "/overview" || pathname === "/") {
     res.writeHead(200, {
       "Content-type": "text/html",
     });
@@ -75,15 +78,16 @@ const server = http.createServer((req, res) => {
     res.end(output);
 
     //PRODUCT PAGE
-  } else if (req.url === "/product") {
+  } else if (pathname === "/product") {
     res.writeHead(200, {
       "Content-type": "text/html",
-      "Who-is-kiran": "my-wife",
     });
-    res.end("<h1 style='color:green;'>This is PRODUCT</h1>");
+    const product = dataObj[query.id];
+    const output = replaceTemplate(tempProduct, product);
+    res.end(output);
 
     //API PAGE
-  } else if (req.url === "/api") {
+  } else if (pathname === "/api") {
     res.writeHead(200, {
       "Content-type": "application/json",
     });
